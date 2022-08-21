@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate{
 
@@ -49,6 +50,30 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
     }
 
     @IBAction func SaveClicked(_ sender: Any) {
+        let appDelegate=UIApplication.shared.delegate as!AppDelegate
+        let context=appDelegate.persistentContainer.viewContext
+        
+        let newPainting=NSEntityDescription.insertNewObject(forEntityName: "Images", into: context)
+        
+        newPainting.setValue(txtName.text, forKey: "name")
+        
+        if let year = Int(txtYear.text!){
+            newPainting.setValue(year, forKey: "year")
+        }
+        newPainting.setValue(txtArtist.text, forKey: "artist")
+        newPainting.setValue(UUID(), forKey: "id")
+        
+        let data = artImage.image!.jpegData(compressionQuality: 0.5)
+        
+        newPainting.setValue(data, forKey: "image")
+        
+        do{
+            try context.save()
+            print("success")
+        }
+        catch{
+            print("error")
+        }
     }
     
 
