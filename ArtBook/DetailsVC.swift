@@ -16,6 +16,7 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
     @IBOutlet weak var txtName: UITextField!
     
   
+    @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var txtYear: UITextField!
     @IBOutlet weak var txtArtist: UITextField!
     @IBOutlet weak var artImage: UIImageView!
@@ -23,6 +24,8 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
     override func viewDidLoad() {
         
         if chosenPainting != ""{
+            btnSave.isHidden=true
+            artImage.isUserInteractionEnabled=false
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             let context = appDelegate.persistentContainer.viewContext
             let fetchRequest=NSFetchRequest<NSFetchRequestResult>(entityName: "Images")
@@ -55,6 +58,9 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
             }
             
         }else {
+            btnSave.isHidden=false
+            btnSave.isEnabled=false
+            artImage.isUserInteractionEnabled=true
             txtName.text=""
             txtArtist.text=""
             txtYear.text=""
@@ -66,7 +72,6 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(gestureRecognizer)
         
-        artImage.isUserInteractionEnabled=true
         let imageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectImage))
         artImage.addGestureRecognizer(imageTapRecognizer)
     }
@@ -81,8 +86,9 @@ class DetailsVC: UIViewController , UIImagePickerControllerDelegate, UINavigatio
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         artImage.image=info[.editedImage] as? UIImage
+        btnSave.isEnabled=true
         self.dismiss(animated: true) {
-            print("imagePicker kapatildi")
+            print("imagePicker closed")
         }
     }
     
